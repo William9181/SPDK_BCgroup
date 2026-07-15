@@ -1,0 +1,46 @@
+[global]
+ioengine=/home/william/spdk_bcgroup/build/fio/spdk_nvme  
+thread=1
+direct=1
+time_based=1
+runtime=90
+group_reporting
+#iodepth=256
+
+write_iops_log=benchmark_log/FIO/  # 輸出 IOPS 日誌
+write_lat_log=benchmark_log/FIO/    # 輸出 Latency 日誌
+write_bw_log=benchmark_log/FIO/   # 輸出 Latency 日誌
+log_avg_msec=500
+#log_offset=1
+
+[qos_disk0_job]
+# 連線到 ns=1 
+filename=trtype=tcp adrfam=IPv4 traddr=140.120.15.169 trsvcid=4420 subnqn=nqn.2016-06.io.spdk\:cnode1 ns=1
+rw=randread
+blocksize=4k
+iodepth=128
+new_group=0
+cpus_allowed=1
+#rwmixread=80
+
+[qos_disk1_job]
+# 連線到 ns=2 
+filename=trtype=tcp adrfam=IPv4 traddr=140.120.15.169 trsvcid=4420 subnqn=nqn.2016-06.io.spdk\:cnode1 ns=2
+rw=randread
+blocksize=4k
+iodepth=128
+new_group=1
+cpus_allowed=2
+#rwmixread=80
+#startdelay=10
+
+[qos_disk2_job]
+# 連線到 ns=3 
+filename=trtype=tcp adrfam=IPv4 traddr=140.120.15.169 trsvcid=4420 subnqn=nqn.2016-06.io.spdk\:cnode1 ns=3
+rw=randread
+blocksize=4k
+iodepth=128
+new_group=1
+cpus_allowed=3
+#rwmixread=80
+

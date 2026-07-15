@@ -1,0 +1,39 @@
+[global]
+ioengine=/home/william/spdk_bcgroup/build/fio/spdk_nvme  
+thread=1
+direct=1
+time_based=1
+group_reporting
+log_avg_msec=500
+
+write_iops_log=benchmark_log/FIO/
+write_lat_log=benchmark_log/FIO/
+write_bw_log=benchmark_log/FIO/
+
+[qos_disk1_job]
+filename=trtype=tcp adrfam=IPv4 traddr=140.120.15.169 trsvcid=4420 subnqn=nqn.2016-06.io.spdk\:cnode1 ns=2
+rw=randread
+blocksize=4k        # 建議用 4k (儲存系統的標準小檔測試大小)
+iodepth=32          # 降低 iodepth，讓延遲對底層干擾更敏感
+new_group=1
+cpus_allowed=2
+runtime=90          # 跑滿 90 秒
+
+[qos_disk2_job]
+filename=trtype=tcp adrfam=IPv4 traddr=140.120.15.169 trsvcid=4420 subnqn=nqn.2016-06.io.spdk\:cnode1 ns=3
+rw=randread
+blocksize=4k
+iodepth=32
+new_group=1
+cpus_allowed=3
+runtime=90          # 跑滿 90 秒
+
+[qos_disk0_job]
+filename=trtype=tcp adrfam=IPv4 traddr=140.120.15.169 trsvcid=4420 subnqn=nqn.2016-06.io.spdk\:cnode1 ns=1
+rw=write            # 致命設定 1：改為循序寫入
+blocksize=1M        # 致命設定 2：1MB 超大區塊榨乾頻寬
+iodepth=128         # 致命設定 3：塞爆底層 Queue
+new_group=0
+cpus_allowed=1
+startdelay=30       # 關鍵：前 30 秒先不動作，讓受害者建立 baseline
+runtime=60          # 跑剩下的 60 秒 (總實驗時間 90 秒)
