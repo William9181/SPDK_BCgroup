@@ -36,7 +36,7 @@ sudo ./scripts/pkgdep.sh
 # 設定並編譯
 ./configure
 # 如須使用 fio
-./configure --with-fio= &FIO_path
+./configure --with-fio=$(FIO_path)
 
 # 編譯
 make -j$(nproc)
