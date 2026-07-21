@@ -1,12 +1,11 @@
 diff --git a/app/spdk_tgt/Makefile b/app/spdk_tgt/Makefile
-index 30d2e5338..069ce42e9 100644
+index 552f7a78d..069ce42e9 100644
 --- a/app/spdk_tgt/Makefile
 +++ b/app/spdk_tgt/Makefile
-@@ -12,7 +12,7 @@ APP = spdk_tgt
+@@ -12,6 +12,7 @@ APP = spdk_tgt
  C_SRCS := spdk_tgt.c
  
  SPDK_LIB_LIST = $(ALL_MODULES_LIST)
--SPDK_LIB_LIST += bdev_my_qos
 +SPDK_LIB_LIST += bdev_bcgroup
  
  SPDK_LIB_LIST += event event_iscsi event_nvmf
@@ -99,14 +98,14 @@ index 000000000..d93395c4f
 +
 +    send_request(method_name, params)
 diff --git a/module/bdev/Makefile b/module/bdev/Makefile
-index cd9e654bd..43ee04727 100644
+index 561974cc7..43ee04727 100644
 --- a/module/bdev/Makefile
 +++ b/module/bdev/Makefile
 @@ -6,7 +6,7 @@
  SPDK_ROOT_DIR := $(abspath $(CURDIR)/../..)
  include $(SPDK_ROOT_DIR)/mk/spdk.common.mk
  
--DIRS-y += delay error gpt lvol malloc null nvme passthru raid split zone_block my_qos
+-DIRS-y += delay error gpt lvol malloc null nvme passthru raid split zone_block
 +DIRS-y += delay error gpt lvol malloc null nvme passthru raid split zone_block bcgroup
  
  DIRS-$(CONFIG_XNVME) += xnvme
@@ -159,13 +158,13 @@ index 000000000..ecf3bedef
 +// 104857600 = 100mbps
 diff --git a/module/bdev/bcgroup/io.weight b/module/bdev/bcgroup/io.weight
 new file mode 100644
-index 000000000..71baca2c9
+index 000000000..300deb232
 --- /dev/null
 +++ b/module/bdev/bcgroup/io.weight
 @@ -0,0 +1,3 @@
-+QosDisk0=50
-+QosDisk1=100
-+QosDisk2=200
++QosDisk0=1000
++QosDisk1=0
++QosDisk2=0
 diff --git a/module/bdev/bcgroup/vbdev_bcgroup.c b/module/bdev/bcgroup/vbdev_bcgroup.c
 new file mode 100644
 index 000000000..f68b012c9
