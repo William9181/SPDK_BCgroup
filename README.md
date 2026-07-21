@@ -22,7 +22,7 @@ git checkout f288c545b6e9b9139b9e8671e8c7b3bf6fefa83d
 
 # 下載並套用 BCgroup 修補檔
 git clone https://github.com/William9181/SPDK_BCgroup.git
-git apply ../SPDK_BCgroup/bcgroup_framework.patch
+git apply SPDK_BCgroup/bcgroup_framework.patch
 ```
 
 ## 3. 編譯與建置
