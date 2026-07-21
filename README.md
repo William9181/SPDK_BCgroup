@@ -6,12 +6,9 @@
 * `bcgroup_framework.patch`: 包含 BCgroup 核心模組 (bdev/bcgroup) 與 SPDK 相關 Makefile 修改的修補檔。
 * `benchmarks/`: 包含用於驗證效能隔離與 Noisy Neighbor 干擾測試的 FIO 設定檔與 Python/Shell 腳本。
 
-## 1. 環境準備
-請確保你的系統已安裝編譯 SPDK 所需的相依套件（如 DPDK 依賴項）。本專案於 Ubuntu 環境下開發與測試。
-
-## 2. 原始碼下載與 Patch 套用
+## 1. 原始碼下載與 Patch 套用
+確保你的系統已安裝編譯 SPDK 所需的相依套件（如 DPDK 依賴項）。本專案於 Ubuntu 環境下開發與測試。
 為了確保相容性，請務必切換至本專案開發時所使用的 SPDK 版本。
-
 ```bash
 # 下載 SPDK 官方原始碼
 git clone https://github.com/spdk/spdk.git
@@ -25,7 +22,7 @@ git clone https://github.com/William9181/SPDK_BCgroup.git
 git apply SPDK_BCgroup/bcgroup_framework.patch
 ```
 
-## 3. 編譯與建置
+## 2. 編譯與建置
 套用 Patch 後，BCgroup 模組已整合至 SPDK 的建置系統中。請執行標準的編譯流程：
 ```bash
 # 初始化並下載所有需要的子模組
