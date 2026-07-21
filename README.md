@@ -17,7 +17,7 @@
 git clone https://github.com/spdk/spdk.git
 cd spdk
 
-# 切換至相容的 commit 版本 (請替換為你實際使用的 commit hash 或 tag)
+# 切換至相容的 commit 版本
 git checkout f288c545b6e9b9139b9e8671e8c7b3bf6fefa83d
 
 # 下載並套用 BCgroup 修補檔
@@ -28,10 +28,16 @@ git apply ../SPDK_BCgroup/bcgroup_framework.patch
 ## 3. 編譯與建置
 套用 Patch 後，BCgroup 模組已整合至 SPDK 的建置系統中。請執行標準的編譯流程：
 ```bash
+# 初始化並下載所有需要的子模組
+git submodule update --init
 # 安裝系統相依套件 (若尚未安裝)
 sudo ./scripts/pkgdep.sh
 
 # 設定並編譯
 ./configure
-make
+# 如須使用 fio
+./configure --with-fio= &FIO_path
+
+# 編譯
+make -j$(nproc)
 ```
