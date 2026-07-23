@@ -1,5 +1,5 @@
 # BCgroup : A Performance Isolation Framework in SPDK-Based Share Storages
-本專案提供一套實作於 SPDK (Storage Performance Development Kit) bdev 層的效能隔離框架 (BCgroup)。  
+本專案提供一套實作於 SPDK (Storage Performance Development Kit) bdev 層的效能隔離框架 (BCgroup)，參考 linux kernel Cgroups 機制。  
 透過自定義的虛擬區塊裝置 (Virtual Bdev) 與輪詢 (Poller) 機制，提供 `io.max`、`io.latency` 與 `io.weight` 等資源控制功能，藉此解決多租戶 NVMe-over-Fabrics (NVMe-oF) 共享儲存環境下的 Noisy Neighbor 效能干擾問題。 
 
 ## 目錄結構
@@ -68,13 +68,26 @@ sudo python3 bcgroup_rpc.py bdev_bcgroup_create base_bdev_name=Nvme0 name=QosDis
   *  base_bdev_name : 對應之 block device
   *  name : bcgroup device name，io控制項皆使用此名稱
 
-到這裡基本上就啟用 BCgroup 模組了，Client 端可直接讀寫裝置，或者透過 Nvme-oF 的方式將此裝置公開至網路上皆可使用！！
+到這裡基本上就啟用 BCgroup 模組了，Client 端可直接讀寫裝置，或者透過 Nvme-oF 的方式將此裝置公開至網路上皆可使用！！  
+SPDK 有提供 Nvme-oF 的實現，可參考官方文檔 [NVMe over Fabrics](http://www.spdk.io/doc/nvmf.html)
 
 ## 4. io控制項
 檔案路徑 : /module/bdev/bcgroup  
-  *  `io.max` : 用於限制單一群組在單位時間內可使用的最大 I/O 資源。    
-  *  `io.latency` : 保護已設定延遲目標的群組，使其平均延遲不可高於目標延遲。  
-  *  `io.weight` : 依照各群組設定的權重分配可用的I/O 派送能力。  
+  *  `io.max` : 用於限制單一群組在單位時間內可使用的最大 I/O 資源，檔案格式如下：
+```bash
+# bcgroup device name, iops limit, bps limit （單位：byte，換行分隔）
+QosDisk0,iops = 0,bps = 0
+```   
+  *  `io.latency` : 保護已設定延遲目標的群組，使其平均延遲不可高於目標延遲。
+```bash
+# bcgroup device name, latency target （單位：us，換行分隔）
+QosDisk0 = 0
+```    
+  *  `io.weight` : 依照各群組設定的權重分配可用的I/O 派送能力。
+```bash
+# bcgroup device name, weight （換行分隔）
+QosDisk0 = 0
+```     
 
 Remote Procedure Call 
   *  `io.stat` : 記錄各個 BCgroup 群組的 I/O 使用狀態。
